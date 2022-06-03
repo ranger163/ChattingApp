@@ -1,10 +1,7 @@
 package me.inassar.demos.socialapp.presentation.auth.login
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -17,9 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -29,11 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import me.inassar.demos.socialapp.R
-import me.inassar.demos.socialapp.presentation.common.Routes
 import me.inassar.demos.socialapp.common.navigateTo
-import me.inassar.demos.socialapp.presentation.common.ErrorText
-import me.inassar.demos.socialapp.presentation.common.Loader
-import me.inassar.demos.socialapp.presentation.common.TextFieldWithError
+import me.inassar.demos.socialapp.presentation.common.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -59,33 +51,10 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = ge
             modifier = Modifier.fillMaxSize()
         ) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        Shapes.Full.copy(
-                            topEnd = CornerSize(0.dp),
-                            topStart = CornerSize(0.dp),
-                            bottomStart = CornerSize(0.dp),
-                            bottomEnd = CornerSize(90.dp)
-                        )
-                    )
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-            ) {
-                Image(
-                    modifier = Modifier
-                        .height(200.dp)
-                        .fillMaxWidth(),
-                    painter = painterResource(id = R.drawable.bg_login_head),
-                    contentDescription = null
-                )
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = "Welcome Back,",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    style = MaterialTheme.typography.headlineLarge
-                )
-            }
+            AuthHeader(
+                title = "Welcome Back,",
+                painterResource = R.drawable.bg_login_head
+            )
 
             Spacer(modifier = Modifier.height(40.dp))
 
