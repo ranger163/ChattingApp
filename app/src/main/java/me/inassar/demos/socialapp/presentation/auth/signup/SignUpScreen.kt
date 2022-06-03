@@ -3,13 +3,13 @@ package me.inassar.demos.socialapp.presentation.auth.signup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,7 +19,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,18 +27,27 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import me.inassar.demos.socialapp.R
 import me.inassar.demos.socialapp.common.navigateTo
-import me.inassar.demos.socialapp.presentation.common.AuthHeader
-import me.inassar.demos.socialapp.presentation.common.Routes
+import me.inassar.demos.socialapp.presentation.common.*
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun SignUpScreen(navController: NavController) {
-    val scrollState = rememberScrollState()
+fun SignUpScreen(navController: NavController, viewModel: SignupViewModel = getViewModel()) {
+    val signupState = viewModel.signupState.value
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
     ) {
+
+        if (signupState.data != null)
+            LaunchedEffect(key1 = true) {
+                navigateTo(
+                    navController = navController,
+                    destination = Routes.FriendsList.route,
+                    clearBackStack = true
+                )
+            }
 
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -57,59 +65,47 @@ fun SignUpScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val username = remember { mutableStateOf(TextFieldValue()) }
-                val email = remember { mutableStateOf(TextFieldValue()) }
-                val password = remember { mutableStateOf(TextFieldValue()) }
-                val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
                 val passwordVisible = remember { mutableStateOf(false) }
                 val confirmPasswordVisible = remember { mutableStateOf(false) }
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Username") },
-                    value = username.value,
-                    onValueChange = { username.value = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                    shape = MaterialTheme.shapes.small,
-                    singleLine = true,
+                TextFieldWithError(
+                    label = "Username",
+                    value = viewModel.usernameState.text,
+                    keyboardType = KeyboardType.Text,
+                    isError = viewModel.usernameState.error != null,
+                    errorMessage = viewModel.usernameState.error,
+                    onValueChange = {
+                        viewModel.onUsernameChange(it)
+                        viewModel.usernameState.validate()
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Email") },
-                    value = email.value,
-                    onValueChange = { email.value = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                    shape = MaterialTheme.shapes.small,
-                    singleLine = true,
+                TextFieldWithError(
+                    label = "Email",
+                    value = viewModel.emailState.text,
+                    keyboardType = KeyboardType.Email,
+                    isError = viewModel.emailState.error != null,
+                    errorMessage = viewModel.emailState.error,
+                    onValueChange = {
+                        viewModel.onEmailChange(it)
+                        viewModel.emailState.validate()
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Password") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                    shape = MaterialTheme.shapes.small,
+                TextFieldWithError(
+                    label = "Password",
+                    value = viewModel.passwordState.text,
+                    keyboardType = KeyboardType.Password,
+                    isError = viewModel.passwordState.error != null,
+                    errorMessage = viewModel.passwordState.error,
+                    onValueChange = {
+                        viewModel.onPasswordChange(it)
+                        viewModel.passwordState.validate()
+                    },
                     trailingIcon = {
                         val eyeIcon = if (passwordVisible.value) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
@@ -120,25 +116,21 @@ fun SignUpScreen(navController: NavController) {
                             Icon(imageVector = eyeIcon, contentDescription = contentDescription)
                         }
                     },
-                    value = password.value,
-                    onValueChange = { password.value = it },
                     visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Confirm Password") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                    shape = MaterialTheme.shapes.small,
+                TextFieldWithError(
+                    label = "Confirm Password",
+                    value = viewModel.confirmPasswordState.text,
+                    keyboardType = KeyboardType.Password,
+                    isError = viewModel.confirmPasswordState.error != null,
+                    errorMessage = viewModel.confirmPasswordState.error,
+                    onValueChange = {
+                        viewModel.onConfirmPasswordChange(it)
+                        viewModel.confirmPasswordState.validate()
+                    },
                     trailingIcon = {
                         val eyeIcon = if (confirmPasswordVisible.value) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
@@ -151,23 +143,18 @@ fun SignUpScreen(navController: NavController) {
                             Icon(imageVector = eyeIcon, contentDescription = contentDescription)
                         }
                     },
-                    value = confirmPassword.value,
-                    onValueChange = { confirmPassword.value = it },
                     visualTransformation = if (confirmPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                if (signupState.error.isNotBlank())
+                    ErrorText(signupState.error)
+
                 Button(modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                     onClick = {
-                        navigateTo(
-                            navController = navController,
-                            destination = Routes.FriendsList.route,
-                            clearBackStack = true
-                        )
+                        viewModel.performSignup()
                     }) {
                     Text(text = "Sign up", color = MaterialTheme.colorScheme.onSecondaryContainer)
                 }
@@ -207,6 +194,8 @@ fun SignUpScreen(navController: NavController) {
                 }
             })
     }
+
+    Loader(isLoading = signupState.isLoading)
 }
 
 @Preview(showBackground = true)

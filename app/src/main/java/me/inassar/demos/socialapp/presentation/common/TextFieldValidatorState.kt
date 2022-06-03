@@ -5,7 +5,7 @@ package me.inassar.demos.socialapp.presentation.common
 import android.util.Patterns
 import java.util.regex.Pattern
 
-class Username :
+class UsernameState :
     TextFieldState(validator = ::isUsernameValid, errorMessage = ::usernameErrorMessage)
 
 class EmailState : TextFieldState(validator = ::isEmailValid, errorMessage = ::emailErrorMessage)
