@@ -1,5 +1,8 @@
 package me.inassar.demos.socialapp.di
 
+import me.inassar.demos.socialapp.common.ktorHttpClient
+import org.koin.dsl.module
+
 /**
  * App module
  * This DI module will be responsible of providing dependencies
@@ -7,5 +10,6 @@ package me.inassar.demos.socialapp.di
  * them into classes constructors
  * @constructor Create empty App module
  */
-object AppModule {
+val appModule = module {
+    single { ktorHttpClient }
 }
