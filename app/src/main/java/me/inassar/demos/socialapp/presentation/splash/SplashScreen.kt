@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
-import me.inassar.demos.socialapp.common.Routes
+import me.inassar.demos.socialapp.presentation.common.Routes
 import me.inassar.demos.socialapp.common.navigateTo
 
 @Composable

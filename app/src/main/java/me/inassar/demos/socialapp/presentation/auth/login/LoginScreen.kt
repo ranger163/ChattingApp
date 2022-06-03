@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import me.inassar.demos.socialapp.R
-import me.inassar.demos.socialapp.common.Routes
+import me.inassar.demos.socialapp.presentation.common.Routes
 import me.inassar.demos.socialapp.common.navigateTo
 import me.inassar.demos.socialapp.presentation.common.ErrorText
 import me.inassar.demos.socialapp.presentation.common.Loader

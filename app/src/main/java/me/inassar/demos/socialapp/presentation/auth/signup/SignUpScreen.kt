@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import me.inassar.demos.socialapp.R
-import me.inassar.demos.socialapp.common.Routes
+import me.inassar.demos.socialapp.presentation.common.Routes
 import me.inassar.demos.socialapp.common.navigateTo
 
 @Composable

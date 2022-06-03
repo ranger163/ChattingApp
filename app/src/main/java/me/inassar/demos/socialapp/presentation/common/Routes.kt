@@ -1,4 +1,4 @@
-package me.inassar.demos.socialapp.common
+package me.inassar.demos.socialapp.presentation.common
 
 sealed class Routes(val route: String) {
     object Splash : Routes("Splash")

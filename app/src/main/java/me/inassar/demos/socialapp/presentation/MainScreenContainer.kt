@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import me.inassar.demos.socialapp.common.Routes
+import me.inassar.demos.socialapp.presentation.common.Routes
 import me.inassar.demos.socialapp.presentation.auth.forgotPassword.ForgotPasswordScreen
 import me.inassar.demos.socialapp.presentation.auth.login.LoginScreen
 import me.inassar.demos.socialapp.presentation.auth.signup.SignUpScreen
