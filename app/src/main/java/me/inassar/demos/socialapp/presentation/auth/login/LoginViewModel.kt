@@ -6,12 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.inassar.demos.socialapp.common.ResponseResource
+import me.inassar.demos.socialapp.common.SessionPrefs
 import me.inassar.demos.socialapp.data.remote.dto.login.request.LoginRequestDto
+import me.inassar.demos.socialapp.domain.mapper.toUser
 import me.inassar.demos.socialapp.domain.usecase.LoginUseCase
 import me.inassar.demos.socialapp.presentation.common.EmailState
 import me.inassar.demos.socialapp.presentation.common.PasswordState
 
-class LoginViewModel(private val useCase: LoginUseCase) : ViewModel() {
+class LoginViewModel(
+    private val useCase: LoginUseCase,
+    private val sessionPrefs: SessionPrefs
+) : ViewModel() {
 
     private val _emailState = EmailState()
     val emailState: EmailState = _emailState
@@ -41,8 +46,11 @@ class LoginViewModel(private val useCase: LoginUseCase) : ViewModel() {
                     when (it) {
                         is ResponseResource.Error -> _loginState.value =
                             LoginState(error = it.errorMessage.errorMessage.orEmpty())
-                        is ResponseResource.Success -> _loginState.value =
-                            LoginState(data = it.data)
+                        is ResponseResource.Success -> {
+                            sessionPrefs.saveUser(it.data.toUser().copy(isLoggedIn = true))
+                            _loginState.value =
+                                LoginState(data = it.data)
+                        }
                     }
                 }
             }

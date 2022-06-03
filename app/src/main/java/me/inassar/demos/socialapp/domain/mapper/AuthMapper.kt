@@ -4,15 +4,30 @@ import me.inassar.demos.socialapp.data.remote.dto.login.response.LoginResponseDt
 import me.inassar.demos.socialapp.data.remote.dto.signup.response.SignupResponseDto
 import me.inassar.demos.socialapp.domain.model.login.LoginResponse
 import me.inassar.demos.socialapp.domain.model.signup.SignupResponse
+import me.inassar.demos.socialapp.domain.model.user.User
 
 fun LoginResponseDto.toLoginResponse() = LoginResponse(
     token = data?.token,
     username = data?.user?.username,
+    email = data?.user?.email,
     errorMessage = error?.message
 )
 
 fun SignupResponseDto.toSignupResponse() = SignupResponse(
     token = data?.token,
     username = data?.user?.username,
+    email = data?.user?.email,
     errorMessage = error?.message
+)
+
+fun LoginResponse.toUser() = User(
+    username = username,
+    email = email,
+    token = token,
+)
+
+fun SignupResponse.toUser() = User(
+    username = username,
+    email = email,
+    token = token,
 )

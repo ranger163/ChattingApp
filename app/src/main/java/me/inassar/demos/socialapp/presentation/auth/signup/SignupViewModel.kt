@@ -6,13 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.inassar.demos.socialapp.common.ResponseResource
+import me.inassar.demos.socialapp.common.SessionPrefs
 import me.inassar.demos.socialapp.data.remote.dto.signup.request.SignupRequestDto
+import me.inassar.demos.socialapp.domain.mapper.toUser
 import me.inassar.demos.socialapp.domain.usecase.SignupUseCase
 import me.inassar.demos.socialapp.presentation.common.EmailState
 import me.inassar.demos.socialapp.presentation.common.PasswordState
 import me.inassar.demos.socialapp.presentation.common.UsernameState
 
-class SignupViewModel(private val useCase: SignupUseCase) : ViewModel() {
+class SignupViewModel(
+    private val useCase: SignupUseCase,
+    private val sessionPrefs: SessionPrefs
+) : ViewModel() {
 
     private val _usernameState = UsernameState()
     val usernameState = _usernameState
@@ -59,8 +64,11 @@ class SignupViewModel(private val useCase: SignupUseCase) : ViewModel() {
                     when (it) {
                         is ResponseResource.Error -> _signupState.value =
                             SignupState(error = it.errorMessage.errorMessage.orEmpty())
-                        is ResponseResource.Success -> _signupState.value =
-                            SignupState(data = it.data)
+                        is ResponseResource.Success -> {
+                            sessionPrefs.saveUser(it.data.toUser().copy(isLoggedIn = true))
+                            _signupState.value =
+                                SignupState(data = it.data)
+                        }
                     }
                 }
             }
@@ -89,6 +97,5 @@ class SignupViewModel(private val useCase: SignupUseCase) : ViewModel() {
         }
         return true
     }
-
 
 }

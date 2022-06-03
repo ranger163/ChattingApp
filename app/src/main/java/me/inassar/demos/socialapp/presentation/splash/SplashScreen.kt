@@ -19,11 +19,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
+import me.inassar.demos.socialapp.common.SessionPrefs
 import me.inassar.demos.socialapp.presentation.common.Routes
 import me.inassar.demos.socialapp.common.navigateTo
+import org.koin.androidx.compose.inject
 
 @Composable
 fun SplashScreen(navController: NavController) {
+    val sessionPrefs by inject<SessionPrefs>()
+
     val scale = remember {
         androidx.compose.animation.core.Animatable(0f)
     }
@@ -36,13 +40,11 @@ fun SplashScreen(navController: NavController) {
                 easing = { OvershootInterpolator(4f).getInterpolation(it) })
         )
         delay(800L)
-        navController.apply {
-            navigateTo(
-                navController = navController,
-                destination = Routes.Login.route,
-                clearBackStack = true
-            )
-        }
+        navigateTo(
+            navController = navController,
+            destination = if (sessionPrefs.getUser()?.isLoggedIn == true) Routes.FriendsList.route else Routes.Login.route,
+            clearBackStack = true
+        )
     }
 
     Box(
@@ -55,7 +57,7 @@ fun SplashScreen(navController: NavController) {
             modifier = Modifier.scale(scale.value),
             text = "iNassar Demos",
             color = MaterialTheme.colorScheme.onPrimaryContainer,
-            style = MaterialTheme.typography.headlineLarge.copy(fontFamily = FontFamily.Monospace )
+            style = MaterialTheme.typography.headlineLarge.copy(fontFamily = FontFamily.Monospace)
         )
     }
 }
