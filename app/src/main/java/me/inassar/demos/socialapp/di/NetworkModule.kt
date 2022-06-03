@@ -1,10 +1,15 @@
 package me.inassar.demos.socialapp.di
 
+import me.inassar.demos.socialapp.data.remote.source.AuthRemote
+import me.inassar.demos.socialapp.data.remote.source.AuthRemoteImpl
+import org.koin.dsl.module
+
 /**
  * Network module
- * This class will be responsible of providing network dependencies
+ * This DI module will be responsible of providing network dependencies
  * which need to be live as long as app is living
  * @constructor Create empty Network module
  */
-object NetworkModule {
+val networkModule = module {
+    single<AuthRemote> { AuthRemoteImpl(get()) }
 }
