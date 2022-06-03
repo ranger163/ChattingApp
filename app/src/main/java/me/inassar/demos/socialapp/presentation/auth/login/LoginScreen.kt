@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,16 +31,29 @@ import androidx.navigation.compose.rememberNavController
 import me.inassar.demos.socialapp.R
 import me.inassar.demos.socialapp.common.Routes
 import me.inassar.demos.socialapp.common.navigateTo
+import me.inassar.demos.socialapp.presentation.common.ErrorText
+import me.inassar.demos.socialapp.presentation.common.Loader
+import me.inassar.demos.socialapp.presentation.common.TextFieldWithError
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
-    val scrollState = rememberScrollState()
+fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = getViewModel()) {
+    val loginState = viewModel.loginState.value
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
     ) {
+
+        if (loginState.data != null)
+            LaunchedEffect(key1 = true) {
+                navigateTo(
+                    navController = navController,
+                    destination = Routes.FriendsList.route,
+                    clearBackStack = true
+                )
+            }
 
         Column(
             modifier = Modifier.fillMaxSize()
@@ -84,38 +96,32 @@ fun LoginScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val email = remember { mutableStateOf(TextFieldValue()) }
-                val password = remember { mutableStateOf(TextFieldValue()) }
                 val passwordVisible = remember { mutableStateOf(false) }
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Email") },
-                    value = email.value,
-                    onValueChange = { email.value = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                    shape = MaterialTheme.shapes.small,
-                    singleLine = true,
+                TextFieldWithError(
+                    label = "Email",
+                    value = viewModel.emailState.text,
+                    keyboardType = KeyboardType.Email,
+                    isError = viewModel.emailState.error != null,
+                    errorMessage = viewModel.emailState.error,
+                    onValueChange = {
+                        viewModel.onEmailChanged(it)
+                        viewModel.emailState.validate()
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Password") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                    shape = MaterialTheme.shapes.small,
+                TextFieldWithError(
+                    label = "Password",
+                    value = viewModel.passwordState.text,
+                    keyboardType = KeyboardType.Password,
+                    isError = viewModel.passwordState.error != null,
+                    errorMessage = viewModel.passwordState.error,
+                    onValueChange = {
+                        viewModel.onPasswordChanged(it)
+                        viewModel.passwordState.validate()
+                    },
                     trailingIcon = {
                         val eyeIcon = if (passwordVisible.value) Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
@@ -126,11 +132,7 @@ fun LoginScreen(navController: NavHostController) {
                             Icon(imageVector = eyeIcon, contentDescription = contentDescription)
                         }
                     },
-                    value = password.value,
-                    onValueChange = { password.value = it },
                     visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -146,14 +148,15 @@ fun LoginScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                if (loginState.error.isNotBlank())
+                    ErrorText(loginState.error)
+
+                Spacer(modifier = Modifier.height(20.dp))
+
                 Button(modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                     onClick = {
-                        navigateTo(
-                            navController = navController,
-                            destination = Routes.FriendsList.route,
-                            clearBackStack = true
-                        )
+                        viewModel.performLogin()
                     }) {
                     Text(text = "Login in", color = MaterialTheme.colorScheme.onSecondaryContainer)
                 }
@@ -193,6 +196,7 @@ fun LoginScreen(navController: NavHostController) {
                 }
             })
     }
+    Loader(isLoading = loginState.isLoading)
 }
 
 @Preview(showBackground = true)
