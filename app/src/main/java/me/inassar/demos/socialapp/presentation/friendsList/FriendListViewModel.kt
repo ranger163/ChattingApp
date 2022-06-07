@@ -19,11 +19,19 @@ class FriendListViewModel(
     private val sessionPrefs: SessionPrefs
 ) : ViewModel() {
 
+    private val _searchState = mutableStateOf("")
+    val searchState: State<String> = _searchState
+
     private val _friendListState = mutableStateOf(FriendListState())
     val friendListState: State<FriendListState> = _friendListState
 
     init {
         getFriendList()
+    }
+
+    fun onSearchTextChange(result: String) {
+        // TODO: I'm too lazy to handle search, on other hand you are the hero so have fun :D
+        _searchState.value = result
     }
 
     fun performLogout(navController: NavController) {

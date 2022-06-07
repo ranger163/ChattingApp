@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,8 +29,7 @@ fun FriendListItemRow(friendData: FriendList.FriendInfo, navController: NavContr
         Modifier
             .fillMaxWidth()
             .clickable { navigateTo(navController = navController, Routes.ChatRoom.route) }
-            .height(100.dp)
-            .padding(16.dp)
+            .height(60.dp)
     ) {
         Image(
             modifier = Modifier
@@ -57,14 +58,16 @@ fun FriendListItemRow(friendData: FriendList.FriendInfo, navController: NavContr
                     )
                 )
                 Text(
-                    text = "10 Minutes",
+                    text = "${(1..10).random()} Minutes",
                     style = MaterialTheme.typography.labelSmall
                 )
             }
             Text(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                text = "Hello ${friendData.email} how are you?",
+                    .fillMaxWidth()
+                    .padding(end = 40.dp),
+                text = LoremIpsum((1..10).random()).values.toList()[0],
+                overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontSize = 11.sp
                 ),
