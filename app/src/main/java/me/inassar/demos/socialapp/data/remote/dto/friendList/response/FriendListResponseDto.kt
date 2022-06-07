@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class FriendListResponseDto(
     @SerialName("data")
     val `data`: List<FriendListData?>? = null,
-    val error: Error?=null
+    val error: Error? = null
 ) {
     @Serializable
     data class FriendListData(
@@ -18,7 +18,8 @@ data class FriendListResponseDto(
         @Serializable
         data class FriendInfo(
             val email: String?,
-            val username: String?
+            val username: String?,
+            val avatar: String?
         )
     }
 

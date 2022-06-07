@@ -5,8 +5,9 @@ data class FriendList(
     val errorMessage: String? = null
 ) {
     data class FriendInfo(
-        val token: String?,
-        val email: String?,
-        val username: String?,
+        val token: String,
+        val email: String,
+        val username: String,
+        val avatar: String,
     )
 }

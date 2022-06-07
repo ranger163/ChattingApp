@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { LoginViewModel(get(), get()) }
     viewModel { SignupViewModel(get(), get()) }
-    viewModel { FriendListViewModel(get()) }
+    viewModel { FriendListViewModel(get(), get()) }
 }

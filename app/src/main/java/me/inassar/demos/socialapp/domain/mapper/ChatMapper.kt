@@ -8,9 +8,10 @@ fun FriendListResponseDto.toFriendList(): FriendList {
     data?.forEach {
         friendList.add(
             FriendList.FriendInfo(
-                token = it?.token,
-                username = it?.friendInfo?.username,
-                email = it?.friendInfo?.email
+                token = it?.token.orEmpty(),
+                username = it?.friendInfo?.username.orEmpty(),
+                email = it?.friendInfo?.email.orEmpty(),
+                avatar = it?.friendInfo?.avatar.orEmpty(),
             )
         )
     }

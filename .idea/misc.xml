@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Work/Playground/SocialApp/app/src/main/java/me/inassar/demos/socialapp/MainActivity.kt" value="0.2824074074074074" />
+        <entry key="..\:/Work/Playground/SocialApp/app/src/main/java/me/inassar/demos/socialapp/presentation/friendsList/FriendsListScreen.kt" value="0.38055555555555554" />
         <entry key="..\:/Work/Playground/SocialApp/app/src/main/java/me/inassar/demos/socialapp/presentation/splash/SplashScreen.kt" value="0.11106418918918919" />
         <entry key="..\:/Work/Playground/SocialApp/app/src/main/java/me/inassar/demos/socialapp/ui/auth/forgotPassword/ForgotPasswordScreen.kt" value="0.21265822784810126" />
         <entry key="..\:/Work/Playground/SocialApp/app/src/main/java/me/inassar/demos/socialapp/ui/auth/login/LoginScreen.kt" value="0.21181434599156118" />

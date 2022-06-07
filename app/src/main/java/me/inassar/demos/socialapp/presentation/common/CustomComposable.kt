@@ -104,3 +104,21 @@ fun Loader(isLoading: Boolean) {
             CircularProgressIndicator()
         }
 }
+
+@Composable
+fun Dialog(
+    title: String = "Oops!",
+    message: String,
+    confirmBtnText: String,
+    confirmBtnClick: () -> Unit
+) {
+    AlertDialog(
+        title = { Text(text = title) },
+        text = { Text(text = message) },
+        onDismissRequest = { },
+        confirmButton = {
+            TextButton(onClick = { confirmBtnClick() }) {
+                Text(text = confirmBtnText)
+            }
+        })
+}

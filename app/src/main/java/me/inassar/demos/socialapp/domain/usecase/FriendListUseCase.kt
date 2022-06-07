@@ -11,12 +11,11 @@ class FriendListUseCase(private val repository: ChatRepository) {
 
     suspend operator fun invoke(): Flow<ResponseResource<FriendList>> = flow {
         repository.getFriendList().collect {
-            when (it) {
-//                is ResponseResource.Error -> emit(ResponseResource.error(FriendList(errorMessage = it.errorMessage.error)))
-//                is ResponseResource.Success -> emit(ResponseResource.success(it.data.data?.map { it?.toFriendList() }))
-                is ResponseResource.Error -> emit(ResponseResource.error(it.errorMessage.toFriendList()))
-                is ResponseResource.Success -> emit(ResponseResource.success(it.data.toFriendList()))
+            val responseResource = when (it) {
+                is ResponseResource.Error -> ResponseResource.error(it.errorMessage.toFriendList())
+                is ResponseResource.Success -> ResponseResource.success(it.data.toFriendList())
             }
+            emit(responseResource)
         }
     }
 }
