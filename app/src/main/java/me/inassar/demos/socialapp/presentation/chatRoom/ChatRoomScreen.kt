@@ -10,10 +10,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 
 @Composable
-fun ChatRoomScreen(navController: NavHostController) {
+fun ChatRoomScreen(
+    navController: NavHostController,
+    friendName: String,
+    friendEmail: String,
+    friendAvatar: String
+) {
     Box(modifier = Modifier
         .fillMaxSize()
         .clickable { navController.popBackStack() }) {
-        Text(modifier = Modifier.align(Alignment.Center), text = "Chat room")
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = "$friendName\n$friendEmail\n$friendAvatar"
+        )
     }
 }

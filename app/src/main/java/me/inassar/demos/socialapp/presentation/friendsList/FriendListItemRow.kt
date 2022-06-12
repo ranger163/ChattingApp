@@ -25,10 +25,17 @@ import me.inassar.demos.socialapp.presentation.common.Routes
 
 @Composable
 fun FriendListItemRow(friendData: FriendList.FriendInfo, navController: NavController) {
+    val args = "${friendData.username}/${friendData.email}/${friendData.avatar}"
+
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable { navigateTo(navController = navController, Routes.ChatRoom.route) }
+            .clickable {
+                navigateTo(
+                    navController = navController,
+                    "${Routes.ChatRoom.route}/$args"
+                )
+            }
             .height(60.dp)
     ) {
         Image(
