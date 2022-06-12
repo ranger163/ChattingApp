@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import me.inassar.demos.socialapp.common.ResponseResource
 import me.inassar.demos.socialapp.common.SessionPrefs
+import me.inassar.demos.socialapp.data.remote.dto.chatRoom.ChatRoomResponseDto
 import me.inassar.demos.socialapp.data.remote.dto.friendList.response.FriendListResponseDto
 import me.inassar.demos.socialapp.data.remote.source.ChatRemote
 import me.inassar.demos.socialapp.domain.repository.ChatRepository
@@ -22,4 +23,16 @@ class ChatRepositoryImpl(
                 }
             emit(responseResource)
         }
+
+    override suspend fun getRoomHistory(
+        receiver: String
+    ): Flow<ResponseResource<ChatRoomResponseDto>> = flow {
+        val responseResource =
+            when (val response = remote.getRoomHistory(sessionPrefs.getUser()?.token, receiver)) {
+                is ResponseResource.Error -> ResponseResource.error(response.errorMessage)
+                is ResponseResource.Success -> ResponseResource.success(response.data)
+            }
+
+        emit(responseResource)
+    }
 }
