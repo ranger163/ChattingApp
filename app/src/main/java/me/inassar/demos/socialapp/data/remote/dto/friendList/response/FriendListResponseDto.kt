@@ -1,13 +1,11 @@
 package me.inassar.demos.socialapp.data.remote.dto.friendList.response
 
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FriendListResponseDto(
-    @SerialName("data")
-    val `data`: List<FriendListData?>? = null,
+    val data: List<FriendListData?>? = null,
     val error: Error? = null
 ) {
     @Serializable
@@ -17,10 +15,19 @@ data class FriendListResponseDto(
     ) {
         @Serializable
         data class FriendInfo(
+            val avatar: String?,
             val email: String?,
-            val username: String?,
-            val avatar: String?
-        )
+            val lastMessage: LastMessage?,
+            val username: String?
+        ) {
+            @Serializable
+            data class LastMessage(
+                val receiver: String?,
+                val sender: String?,
+                val textMessage: String?,
+                val timestamp: Long?
+            )
+        }
     }
 
     @Serializable

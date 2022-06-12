@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import me.inassar.demos.socialapp.common.ENDPOINT_AVATAR
+import me.inassar.demos.socialapp.common.getTimeAgo
 import me.inassar.demos.socialapp.common.navigateTo
 import me.inassar.demos.socialapp.domain.model.friendList.FriendList
 import me.inassar.demos.socialapp.presentation.common.Routes
@@ -58,15 +58,16 @@ fun FriendListItemRow(friendData: FriendList.FriendInfo, navController: NavContr
                     )
                 )
                 Text(
-                    text = "${(1..10).random()} Minutes",
+                    text = if (friendData.lastMessage?.timestamp != null) getTimeAgo(friendData.lastMessage.timestamp) else "",
                     style = MaterialTheme.typography.labelSmall
                 )
             }
+
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 40.dp),
-                text = LoremIpsum((1..10).random()).values.toList()[0],
+                text = friendData.lastMessage?.textMessage ?: "...",
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontSize = 11.sp

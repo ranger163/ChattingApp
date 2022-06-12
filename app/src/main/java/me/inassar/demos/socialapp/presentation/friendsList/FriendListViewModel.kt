@@ -25,10 +25,6 @@ class FriendListViewModel(
     private val _friendListState = mutableStateOf(FriendListState())
     val friendListState: State<FriendListState> = _friendListState
 
-    init {
-        getFriendList()
-    }
-
     fun onSearchTextChange(result: String) {
         // TODO: I'm too lazy to handle search, on other hand you are the hero so have fun :D
         _searchState.value = result
@@ -39,7 +35,7 @@ class FriendListViewModel(
         navigateTo(navController, Routes.Login.route, true)
     }
 
-    private fun getFriendList() {
+     fun getFriendList() {
         _friendListState.value = FriendListState(isLoading = true)
         viewModelScope.launch {
             useCase().onEach {

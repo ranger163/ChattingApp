@@ -8,12 +8,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import me.inassar.demos.socialapp.R
 import me.inassar.demos.socialapp.presentation.common.Dialog
@@ -25,7 +29,21 @@ fun FriendsListScreen(
     navController: NavController,
     viewModel: FriendListViewModel = getViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val friendListState = viewModel.friendListState.value
+
+    DisposableEffect(key1 = lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                viewModel.getFriendList()
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     if (friendListState.error.isNotEmpty())
         Dialog(message = friendListState.error, confirmBtnText = "Login again") {

@@ -12,6 +12,10 @@ fun FriendListResponseDto.toFriendList(): FriendList {
                 username = it?.friendInfo?.username.orEmpty(),
                 email = it?.friendInfo?.email.orEmpty(),
                 avatar = it?.friendInfo?.avatar.orEmpty(),
+                lastMessage = FriendList.FriendInfo.LastMessage(
+                    textMessage = it?.friendInfo?.lastMessage?.textMessage,
+                    timestamp = it?.friendInfo?.lastMessage?.timestamp
+                )
             )
         )
     }
