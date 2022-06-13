@@ -1,10 +1,11 @@
 package me.inassar.demos.socialapp.domain.model.chatRoom
 
 data class RoomHistoryList(
-    val roomData: List<RoomHistory>? = null,
+    val roomData: List<Message>? = null,
     val errorMessage: String? = null
 ) {
-    data class RoomHistory(
+    data class Message(
+        val sessionId: String? = null,
         val receiver: String?,
         val sender: String?,
         val textMessage: String?,

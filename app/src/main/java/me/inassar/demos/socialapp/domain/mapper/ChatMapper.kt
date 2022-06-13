@@ -1,6 +1,7 @@
 package me.inassar.demos.socialapp.domain.mapper
 
 import me.inassar.demos.socialapp.data.remote.dto.chatRoom.ChatRoomResponseDto
+import me.inassar.demos.socialapp.data.remote.dto.chatRoom.MessageResponseDto
 import me.inassar.demos.socialapp.data.remote.dto.friendList.response.FriendListResponseDto
 import me.inassar.demos.socialapp.domain.model.chatRoom.RoomHistoryList
 import me.inassar.demos.socialapp.domain.model.friendList.FriendList
@@ -30,15 +31,13 @@ fun FriendListResponseDto.toFriendList(): FriendList {
 }
 
 fun ChatRoomResponseDto.toRoomHistoryList(): RoomHistoryList {
-    val roomHistoryList = arrayListOf<RoomHistoryList.RoomHistory>()
+    val roomHistoryList = arrayListOf<RoomHistoryList.Message>()
     data?.forEach {
 
-        val date = Date(it?.timestamp ?: 0L)
-        val formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH).format(date)
-        val formattedTime = SimpleDateFormat("hh:mm aa", Locale.ENGLISH).format(date)
+        val (formattedDate, formattedTime) = dateTimeFormat(it?.timestamp)
 
         roomHistoryList.add(
-            RoomHistoryList.RoomHistory(
+            RoomHistoryList.Message(
                 receiver = it?.receiver.orEmpty(),
                 sender = it?.sender.orEmpty(),
                 textMessage = it?.textMessage.orEmpty(),
@@ -52,4 +51,26 @@ fun ChatRoomResponseDto.toRoomHistoryList(): RoomHistoryList {
         roomData = roomHistoryList,
         errorMessage = error?.message
     )
+}
+
+fun MessageResponseDto.toMessage(): RoomHistoryList.Message {
+
+    val (formattedDate, formattedTime) = dateTimeFormat(timestamp)
+    return RoomHistoryList.Message(
+        sessionId=sessionId,
+        textMessage = textMessage,
+        sender = sender,
+        receiver = receiver,
+        timestamp = timestamp,
+        formattedDate = formattedDate,
+        formattedTime = formattedTime
+    )
+
+}
+
+private fun dateTimeFormat(timestamp: Long?): Pair<String, String> {
+    val date = Date(timestamp ?: 0L)
+    val formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH).format(date)
+    val formattedTime = SimpleDateFormat("hh:mm aa", Locale.ENGLISH).format(date)
+    return Pair(formattedDate, formattedTime)
 }

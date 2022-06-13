@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import me.inassar.demos.socialapp.common.ResponseResource
 import me.inassar.demos.socialapp.common.SessionPrefs
 import me.inassar.demos.socialapp.data.remote.dto.chatRoom.ChatRoomResponseDto
+import me.inassar.demos.socialapp.data.remote.dto.chatRoom.MessageResponseDto
 import me.inassar.demos.socialapp.data.remote.dto.friendList.response.FriendListResponseDto
 import me.inassar.demos.socialapp.data.remote.source.ChatRemote
 import me.inassar.demos.socialapp.domain.repository.ChatRepository
@@ -34,5 +35,26 @@ class ChatRepositoryImpl(
             }
 
         emit(responseResource)
+    }
+
+    override suspend fun connectToSocket(
+        sender: String,
+        receiver: String
+    ): ResponseResource<String> {
+        return when (val response =
+            remote.connectToSocket(sender, receiver, sessionPrefs.getUser()?.token.orEmpty())) {
+            is ResponseResource.Error -> ResponseResource.error(response.errorMessage)
+            is ResponseResource.Success -> ResponseResource.success(response.data)
+        }
+    }
+
+    override suspend fun sendMessage(message: String) {
+        remote.sendMessage(message)
+    }
+
+    override fun receiveMessage(): Flow<MessageResponseDto> = remote.receiveMessage()
+
+    override suspend fun disconnectSocket() {
+        remote.disconnectSocket()
     }
 }

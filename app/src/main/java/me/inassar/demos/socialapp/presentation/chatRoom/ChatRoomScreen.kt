@@ -1,19 +1,27 @@
 package me.inassar.demos.socialapp.presentation.chatRoom
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import org.koin.androidx.compose.getViewModel
 
@@ -26,17 +34,33 @@ fun ChatRoomScreen(
     friendAvatar: String,
     viewModel: ChatRoomViewModel = getViewModel()
 ) {
-    val chatHistoryState = viewModel.chatHistoryState.value
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val chatState = viewModel.chatState.value
     val loggedInUser = viewModel.getUserInfo()
 
     LaunchedEffect(key1 = true) {
         viewModel.getChatHistory(friendEmail)
     }
 
+    DisposableEffect(key1 = lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START)
+                viewModel.connectToSocket(
+                    sender = loggedInUser?.email.orEmpty(),
+                    receiver = friendEmail
+                )
+            else if (event == Lifecycle.Event.ON_STOP)
+                viewModel.disconnectSocket()
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            .padding(16.dp)
     ) {
 
         Box(Modifier.fillMaxWidth()) {
@@ -69,7 +93,7 @@ fun ChatRoomScreen(
                 .fillMaxSize(),
             reverseLayout = true
         ) {
-            val groupByTimestampHistoryList = chatHistoryState.data.groupBy { it.formattedDate }
+            val groupByTimestampHistoryList = chatState.data.groupBy { it.formattedDate }
 
             groupByTimestampHistoryList.forEach { (date, messages) ->
                 items(messages) { message ->
@@ -104,6 +128,54 @@ fun ChatRoomScreen(
                     }
                 }
             }
+        }
+
+        OutlinedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            border = BorderStroke(
+                width = 0.5.dp,
+                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.background,
+                disabledContainerColor = MaterialTheme.colorScheme.background,
+                disabledContentColor = MaterialTheme.colorScheme.background
+            )
+        ) {
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = viewModel.messageText.value,
+                onValueChange = viewModel::onMessageChange,
+                placeholder = {
+                    Text(
+                        text = "Type message...",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                    )
+                },
+                singleLine = false,
+                maxLines = 4,
+                colors = TextFieldDefaults.textFieldColors(
+                    disabledTextColor = MaterialTheme.colorScheme.background,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    disabledIndicatorColor = MaterialTheme.colorScheme.background,
+                    containerColor = MaterialTheme.colorScheme.background
+                ),
+                trailingIcon = {
+                    Icon(
+                        modifier = Modifier
+                            .clickable { viewModel.sendMessage() }
+                            .rotate(-45f),
+                        imageVector = Icons.Filled.Send,
+                        contentDescription = "Send message",
+                        tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                    )
+                }
+            )
         }
 
     }

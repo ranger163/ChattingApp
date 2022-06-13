@@ -2,7 +2,7 @@ package me.inassar.demos.socialapp.common
 
 import android.util.Log
 import io.ktor.client.*
-import io.ktor.client.engine.android.*
+import io.ktor.client.engine.cio.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
@@ -12,9 +12,9 @@ import io.ktor.client.features.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
-private const val TIME_OUT = 60_000
+private const val TIME_OUT = 60_000L
 
-val ktorHttpClient = HttpClient(Android) {
+val ktorHttpClient = HttpClient(CIO) {
 
     install(WebSockets)
 
@@ -27,8 +27,7 @@ val ktorHttpClient = HttpClient(Android) {
     }
 
     engine {
-        connectTimeout = TIME_OUT
-        socketTimeout = TIME_OUT
+        requestTimeout = TIME_OUT
     }
 
     install(Logging) {

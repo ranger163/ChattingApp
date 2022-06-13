@@ -20,7 +20,7 @@ import me.inassar.demos.socialapp.domain.model.chatRoom.RoomHistoryList
 
 @Composable
 fun MessageBubble(
-    message: RoomHistoryList.RoomHistory,
+    message: RoomHistoryList.Message,
     isSender: Boolean,
     senderAvatar: String,
     receiverAvatar: String
@@ -50,8 +50,9 @@ fun MessageBubble(
 
         Text(
             modifier = Modifier
-                .weight(0.8f)
                 .padding(top = 8.dp)
+                .weight(0.8f)
+                .wrapContentSize(align = if (isSender) Alignment.CenterEnd else Alignment.CenterStart)
                 .background(
                     color = if (isSender)
                         MaterialTheme.colorScheme.secondaryContainer
@@ -69,7 +70,7 @@ fun MessageBubble(
         )
 
         if (isSender) {
-            AvatarHead(message, senderAvatar, receiverAvatar, isSender)
+            AvatarHead(message, senderAvatar, receiverAvatar, true)
         }
 
     }
@@ -77,7 +78,7 @@ fun MessageBubble(
 
 @Composable
 fun AvatarHead(
-    message: RoomHistoryList.RoomHistory,
+    message: RoomHistoryList.Message,
     senderAvatar: String,
     receiverAvatar: String,
     isSender: Boolean
@@ -86,7 +87,6 @@ fun AvatarHead(
         if (isSender) "$ENDPOINT_AVATAR$senderAvatar.png" else "$ENDPOINT_AVATAR$receiverAvatar.png"
     Column(
         modifier = Modifier
-            .wrapContentSize()
             .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

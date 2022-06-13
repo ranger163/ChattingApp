@@ -11,5 +11,5 @@ val viewModelModule = module {
     viewModel { LoginViewModel(get(), get()) }
     viewModel { SignupViewModel(get(), get()) }
     viewModel { FriendListViewModel(get(), get()) }
-    viewModel { ChatRoomViewModel(get(), get()) }
+    viewModel { ChatRoomViewModel(get(), get(), get()) }
 }
