@@ -75,7 +75,7 @@ fun FriendsListScreen(
                     modifier = Modifier
                         .align(Alignment.Center),
                     text = "Chats",
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }
 

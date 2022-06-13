@@ -16,7 +16,8 @@ data class SignupResponseDto(
         @Serializable
         data class User(
             val email: String? = null,
-            val username: String? = null
+            val username: String? = null,
+            val avatar: String? = null,
         )
     }
 

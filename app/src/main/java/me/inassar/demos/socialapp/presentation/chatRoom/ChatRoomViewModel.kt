@@ -6,12 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.inassar.demos.socialapp.common.ResponseResource
+import me.inassar.demos.socialapp.common.SessionPrefs
 import me.inassar.demos.socialapp.domain.usecase.GetRoomHistoryUseCase
 
-class ChatRoomViewModel(private val getRoomHistoryUseCase: GetRoomHistoryUseCase) : ViewModel() {
+class ChatRoomViewModel(
+    private val getRoomHistoryUseCase: GetRoomHistoryUseCase,
+    private val sessionPrefs: SessionPrefs
+) : ViewModel() {
 
     private val _chatHistoryState = mutableStateOf(ChatRoomHistoryState())
     val chatHistoryState: State<ChatRoomHistoryState> = _chatHistoryState
+
+    fun getUserInfo() = sessionPrefs.getUser()
 
     fun getChatHistory(receiver: String) {
         _chatHistoryState.value = ChatRoomHistoryState(loading = true)
@@ -21,7 +27,7 @@ class ChatRoomViewModel(private val getRoomHistoryUseCase: GetRoomHistoryUseCase
                     is ResponseResource.Error -> _chatHistoryState.value =
                         ChatRoomHistoryState(error = it.errorMessage.errorMessage.orEmpty())
                     is ResponseResource.Success -> _chatHistoryState.value =
-                        ChatRoomHistoryState(data = it.data.roomData.orEmpty())
+                        ChatRoomHistoryState(data = it.data.roomData?.sortedByDescending { it.timestamp }.orEmpty())
                 }
             }
         }

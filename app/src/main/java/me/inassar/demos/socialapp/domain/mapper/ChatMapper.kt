@@ -4,7 +4,7 @@ import me.inassar.demos.socialapp.data.remote.dto.chatRoom.ChatRoomResponseDto
 import me.inassar.demos.socialapp.data.remote.dto.friendList.response.FriendListResponseDto
 import me.inassar.demos.socialapp.domain.model.chatRoom.RoomHistoryList
 import me.inassar.demos.socialapp.domain.model.friendList.FriendList
-import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 fun FriendListResponseDto.toFriendList(): FriendList {
@@ -34,16 +34,17 @@ fun ChatRoomResponseDto.toRoomHistoryList(): RoomHistoryList {
     data?.forEach {
 
         val date = Date(it?.timestamp ?: 0L)
-        val formattedDate = DateFormat
-            .getDateInstance(DateFormat.DEFAULT)
-            .format(date)
+        val formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH).format(date)
+        val formattedTime = SimpleDateFormat("hh:mm aa", Locale.ENGLISH).format(date)
 
         roomHistoryList.add(
             RoomHistoryList.RoomHistory(
                 receiver = it?.receiver.orEmpty(),
                 sender = it?.sender.orEmpty(),
                 textMessage = it?.textMessage.orEmpty(),
-                timestamp = formattedDate
+                timestamp = it?.timestamp,
+                formattedTime = formattedTime,
+                formattedDate = formattedDate,
             )
         )
     }

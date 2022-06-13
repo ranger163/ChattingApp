@@ -10,6 +10,7 @@ fun LoginResponseDto.toLoginResponse() = LoginResponse(
     token = data?.token,
     username = data?.user?.username,
     email = data?.user?.email,
+    avatar = data?.user?.avatar,
     errorMessage = error?.message
 )
 
@@ -17,6 +18,7 @@ fun SignupResponseDto.toSignupResponse() = SignupResponse(
     token = data?.token,
     username = data?.user?.username,
     email = data?.user?.email,
+    avatar = data?.user?.avatar,
     errorMessage = error?.message
 )
 
@@ -24,10 +26,12 @@ fun LoginResponse.toUser() = User(
     username = username,
     email = email,
     token = token,
+    avatar = avatar
 )
 
 fun SignupResponse.toUser() = User(
     username = username,
     email = email,
     token = token,
+    avatar = avatar
 )
