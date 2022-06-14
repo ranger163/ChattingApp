@@ -65,4 +65,4 @@ Install as usual,
 I'm ready for a full-time or a freelancing job, just drop me an email [here](https://www.inassar.me) and let's do our chating.
 
 ## License
-Made with :heart: by [Ahmed Nassar](https://github.com/ranger163), licensed under the [MIT License](https://github.com/ranger163/SocialApp/blob/master/license)
+Made with :heart: by [Ahmed Nassar](https://github.com/ranger163), licensed under the [MIT License](license)
