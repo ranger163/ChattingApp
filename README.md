@@ -55,10 +55,6 @@ Install as usual,
 * Happy coding.
 * Support me by staring this repo and following me for more projects.
 
-## APK
-
-You can try the apk on your device from [here](https://drive.google.com/open?id=1YMFI5PtljkA6A3tVTLEfFcaxLpLHEVZF)
-
 ## Screen Shoots
 
 <img src="https://github.com/ranger163/SocialApp/blob/master/screenshots/login.jpg" width="300" height="650"> <img src="https://github.com/ranger163/SocialApp/blob/master/screenshots/signup.jpg" width="300" height="650">
@@ -69,4 +65,4 @@ You can try the apk on your device from [here](https://drive.google.com/open?id=
 I'm ready for a full-time or a freelancing job, just drop me an email [here](https://www.inassar.me) and let's do our chating.
 
 ## License
-Made with :heart: by [Ahmed Nassar](https://github.com/ranger163), licensed under the [MIT License](LICENSE)
+Made with :heart: by [Ahmed Nassar](https://github.com/ranger163), licensed under the [MIT License](https://github.com/ranger163/SocialApp/blob/master/license)
