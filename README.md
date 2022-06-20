@@ -1,4 +1,4 @@
-# SocialApp
+# Social App Client
 
 ## Introduction
 
