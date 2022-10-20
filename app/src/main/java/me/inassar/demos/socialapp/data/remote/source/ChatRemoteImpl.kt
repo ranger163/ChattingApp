@@ -1,9 +1,10 @@
 package me.inassar.demos.socialapp.data.remote.source
 
 import io.ktor.client.*
-import io.ktor.client.features.websocket.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
-import io.ktor.http.cio.websocket.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.isActive
 import kotlinx.serialization.decodeFromString
@@ -22,18 +23,18 @@ class ChatRemoteImpl(private val client: HttpClient) : ChatRemote {
 
     override suspend fun getFriendList(token: String?): ResponseResource<FriendListResponseDto> =
         try {
-            val response = client.get<FriendListResponseDto>(ENDPOINT_FRIEND_LIST) {
-                header(
-                    "Authorization",
-                    "Bearer $token"
-                )
-            }
+            val response = client.get(ENDPOINT_FRIEND_LIST) {
+                header("Authorization", "Bearer $token")
+            }.body<FriendListResponseDto>()
             when (response.data) {
                 null -> ResponseResource.error(response)
                 else -> ResponseResource.success(response)
             }
         } catch (e: Exception) {
-            ResponseResource.error(FriendListResponseDto(error = FriendListResponseDto.Error("Oops, something bad happened :(")))
+            ResponseResource.error(
+                FriendListResponseDto
+                    (error = FriendListResponseDto.Error("Oops, something bad happened :("))
+            )
         }
 
     override suspend fun getRoomHistory(
@@ -41,20 +42,23 @@ class ChatRemoteImpl(private val client: HttpClient) : ChatRemote {
         receiver: String
     ): ResponseResource<ChatRoomResponseDto> =
         try {
-            val response = client.get<ChatRoomResponseDto>(ENDPOINT_CHAT_HISTORY) {
+            val response = client.get(ENDPOINT_CHAT_HISTORY) {
                 parameter("receiver", receiver)
                 header(
                     "Authorization",
                     "Bearer $token"
                 )
-            }
+            }.body<ChatRoomResponseDto>()
 
             when (response.data) {
                 null -> ResponseResource.error(response)
                 else -> ResponseResource.success(response)
             }
         } catch (e: Exception) {
-            ResponseResource.error(ChatRoomResponseDto(error = ChatRoomResponseDto.Error("Oops, something bad happened :(")))
+            ResponseResource.error(
+                ChatRoomResponseDto
+                    (error = ChatRoomResponseDto.Error("Oops, something bad happened :("))
+            )
         }
 
     override suspend fun connectToSocket(
@@ -106,7 +110,7 @@ class ChatRemoteImpl(private val client: HttpClient) : ChatRemote {
             } ?: flow { }
     } catch (e: Exception) {
         e.printStackTrace()
-        flow { }
+        emptyFlow()
     }
 
     override suspend fun disconnectSocket() {
