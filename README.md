@@ -1,4 +1,4 @@
-# Social App Client
+# Chatting App Client
 
 ## Introduction
 
@@ -10,7 +10,7 @@ this project and start customizing.
 It's a playground application I've been doing on my spare time to play with jetpack compose, compose material 3 and having a socket connection that allows users to chat and have conversations
 with each other, also I've written it's backend server side using [Ktor server](https://ktor.io) and [Kmongo DB](https://litote.org/kmongo) as my database.
 
-To have a full cycle working application (celint and server) please clone the [social-app-server](https://github.com/ranger163/social-app-server) and do what's listed there in the read me file and have fun with it.
+To have a full cycle working application (celint and server) please clone the [chatting-app-server](https://github.com/ranger163/chatting-app-server) and do what's listed there in the read me file and have fun with it.
 
 ## Application features
 
